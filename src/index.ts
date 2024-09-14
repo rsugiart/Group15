@@ -1,10 +1,11 @@
 import { URL } from 'url';
 import { analyzeNpm } from './api_handler/npm_handler/analyzer_npm.js';
 import { analyzeGraphQL } from './api_handler/graphql_handler/analyzer_graphql.js';
+//import { indexValidation } from './validation.js'
 import * as readline from 'readline';
 
 // Function to validate if the input is a valid URL
-function isValidUrl(input: string): boolean {
+export function isValidUrl(input: string): boolean {
     try {
         new URL(input);  // If URL constructor doesn't throw, it's valid
         return true;
@@ -49,13 +50,27 @@ function main() {
 
         console.log("Starting analysis...");
 
-        const npmResult = analyzeNpm();
-        console.log(npmResult);
+        // This if else statement checks if the link is a github link or a npm link, then calls the appropriate analyze functions.  Then it outputs the result.
+        if(urlInput.includes("github.com")){
+            console.log("This is a GitHub link.");
+            const graphqlResult = analyzeGraphQL();
+            console.log(graphqlResult);
+        }
+        else if (urlInput.includes("npmjs.com/package")) {
+            console.log("This is an npm link.");
+            const npmResult = analyzeNpm();
+            console.log(npmResult);
+        }
+        else {
+            console.log("This is neither a GitHub nor an npm link.");
+        }
 
-        const graphqlResult = analyzeGraphQL();
-        console.log(graphqlResult);
+        
 
         console.log("All analyses complete.");
+
+
+        //indexValidation();
 
         rl.close();  // Close the readline interface
     });
